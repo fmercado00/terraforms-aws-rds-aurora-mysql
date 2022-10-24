@@ -9,8 +9,8 @@ resource "aws_cloudwatch_metric_alarm" "alarm_rds_DatabaseConnections_writer" {
   statistic           = "Sum"
   threshold           = var.cw_max_conns
   alarm_description   = "RDS Maximum connection Alarm for ${aws_rds_cluster.default[0].id} writer"
-  alarm_actions       = [var.cw_sns_topic]
-  ok_actions          = [var.cw_sns_topic]
+  alarm_actions       = [aws_sns_topic.aurora_alarm.arn]
+  ok_actions          = [aws_sns_topic.aurora_alarm.arn]
 
   dimensions = {
     DBClusterIdentifier = aws_rds_cluster.default[0].id
