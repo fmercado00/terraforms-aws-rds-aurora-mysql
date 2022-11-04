@@ -7,7 +7,10 @@ resource "aws_db_subnet_group" "default" {
   subnet_ids = var.subnet_ids
 
   tags = {
-    Name = "${var.identifier} DB subnet group"
+    Name        = "${var.identifier} DB subnet group"
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
   }
 }
 
@@ -27,6 +30,12 @@ resource "aws_security_group" "allow_mysql" {
     protocol    = "TCP"
     to_port     = 3306
     cidr_blocks = [var.vpc.cidr_block]
+  }
+
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
   }
 }
 
@@ -57,6 +66,13 @@ resource "aws_rds_cluster" "default" {
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.cluster_parameters.name
   enabled_cloudwatch_logs_exports = var.enabled_cloudwatch_logs_exports
   kms_key_id                      = var.kms_key_arn == "" ? null : var.kms_key_arn
+
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
+  }
+
 }
 
 resource "aws_rds_cluster_instance" "writer" {
@@ -67,6 +83,12 @@ resource "aws_rds_cluster_instance" "writer" {
   engine_version      = aws_rds_cluster.default.engine_version
   monitoring_interval = var.enhanced_monitoring ? 60 : 0
   monitoring_role_arn = var.enhanced_monitoring ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
+
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
+  }
 }
 
 
@@ -81,6 +103,12 @@ resource "aws_rds_cluster_instance" "reader" {
   monitoring_role_arn = var.enhanced_monitoring ? aws_iam_role.rds_enhanced_monitoring[0].arn : null
   promotion_tier      = 1
 
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
+  }
+
 }
 
 resource "aws_rds_cluster_parameter_group" "cluster_parameters" {
@@ -94,5 +122,11 @@ resource "aws_rds_cluster_parameter_group" "cluster_parameters" {
       value        = parameter.value
       apply_method = "pending-reboot"
     }
+  }
+
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
   }
 }

@@ -1,5 +1,10 @@
 resource "aws_secretsmanager_secret" "aurora_secret" {
-  name = "rds/mysql/${var.identifier}"
+  name = "rds/mysql/${var.secret-identifier}"
+  tags = {
+    cost_center = var.cost_center
+    environment = var.environment
+    project     = var.project
+  }
 }
 
 resource "aws_secretsmanager_secret_version" "aurora_secret_value" {
@@ -17,7 +22,7 @@ locals {
     DB_READER_HOST = local.reader_instance_endpoint
   }
   reader_instance_endpoint = var.reader_instance_type == null ? "" : aws_rds_cluster_instance.reader[0].endpoint
-  password = random_password.password.result
+  password                 = random_password.password.result
 }
 
 resource "random_password" "password" {

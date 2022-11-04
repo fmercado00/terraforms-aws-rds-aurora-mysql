@@ -3,6 +3,11 @@ variable "identifier" {
   description = "Cluster identifier"
 }
 
+variable "secret-identifier" {
+  type        = string
+  description = "Secret identifier"
+}
+
 variable "db_name" {
   type        = string
   description = "Initial database name"
@@ -93,4 +98,19 @@ variable "enabled_cloudwatch_logs_exports" {
   description = "Set of log types to export to cloudwatch. If omitted, no logs will be exported. The following log types are supported: `audit`, `error`, `general`, `slowquery`, `postgresql`"
   type        = list(string)
   default     = []
+}
+
+variable "cost_center" {
+  type        = string
+  description = "Cost Center"
+}
+
+variable "environment" {
+  type        = string
+  description = "Environment"
+}
+
+variable "project" {
+  type        = string
+  description = "Project"
 }
